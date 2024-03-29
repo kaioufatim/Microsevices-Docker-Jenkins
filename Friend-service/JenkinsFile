@@ -8,17 +8,13 @@ node {
 
         stage('Build') {
             bat 'mvn clean install'
-
-//             def pom = readMavenPom file:'pom.xml'
-//             print pom.version
-//             env.version = pom.version
         }
 
         stage('Image') {
-            dir ('friend-service') {
-                def app = docker.build "localhost:8078/friend-service:${env.version}"
-                app.push()
-            }
+                steps {
+                    bat 'docker build -t friend-service .'// Construire l'image Docker en utilisant le Dockerfile
+                }
+
         }
 
         stage ('Run') {
