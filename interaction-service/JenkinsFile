@@ -1,0 +1,30 @@
+node {
+
+    withMaven(maven:'maven') {
+
+        stage('Checkout') {
+            git url: 'https://github.com/piomin/sample-spring-microservices.git', credentialsId: 'github-piomin', branch: 'master'
+        }
+
+        stage('Build') {
+            bat 'mvn clean install'
+
+            def pom = readMavenPom file:'pom.xml'
+            print pom.version
+            env.version = pom.version
+        }
+
+        stage('Image') {
+            dir ('interaction-service') {
+                def app = docker.build "localhost:8070/interaction-service:${env.version}"
+                app.push()
+            }
+        }
+
+        stage ('Run') {
+            docker.image("localhost:8070/interaction-service:${env.version}").run('-p 8070:8070 -h interaction --name interaction')
+        }
+
+    }
+
+}

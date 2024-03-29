@@ -1,0 +1,34 @@
+node {
+
+    withMaven(maven:'maven') {
+
+        stage('Checkout') {
+            git url: 'https://github.com/piomin/sample-spring-microservices.git', credentialsId: 'github-piomin', branch: 'master'
+        }
+
+        stage('Build') {
+            bat 'mvn clean install'
+
+            def pom = readMavenPom file:'pom.xml'
+            print pom.version
+            env.version = pom.version
+        }
+
+        stage('Image') {
+            dir ('Friend-service') {
+                def app = docker.build "localhost:8078/Friend-service:${env.version}"
+                app.push()
+            }
+        }
+
+        stage ('Run') {
+            docker.image("localhost:8078/Friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend')
+        }
+
+        stage ('Final') {
+            build job: 'integration-service-pipeline', wait: false
+        }
+
+    }
+
+}
