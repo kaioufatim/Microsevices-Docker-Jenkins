@@ -1,28 +1,29 @@
-node {
 
-    withMaven(maven:'Maven') {
-
-        stage('Checkout') {
-            git url: 'https://github.com/kaioufatim/Microsevices-Docker-Jenkins.git'
-        }
-
-        stage('Build') {
-            bat 'mvn clean install'
-        }
-
-        stage('Image') {
-                    bat 'docker build Friend-service -t friend-service'// Construire l'image Docker en utilisant le Dockerfile
-
-        }
-
-        stage ('Run') {
-                    docker.image("localhost:8078/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend ')
-
-//             docker.image("localhost:5000/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend --link discovery')
-        }
-
-
-
-    }
-
-} 
+// node {
+//
+//     withMaven(maven:'Maven') {
+//
+//         stage('Checkout') {
+//             git url: 'https://github.com/kaioufatim/Microsevices-Docker-Jenkins.git'
+//         }
+//
+//         stage('Build') {
+//             bat 'mvn clean install'
+//         }
+//
+//         stage('Image') {
+//                     bat 'docker build Friend-service -t friend-service'// Construire l'image Docker en utilisant le Dockerfile
+//
+//         }
+//
+//         stage ('Run') {
+//                     docker.image("localhost:8078/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend ')
+//
+// //             docker.image("localhost:5000/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend --link discovery')
+//         }
+//
+//
+//
+//     }
+//
+// }
