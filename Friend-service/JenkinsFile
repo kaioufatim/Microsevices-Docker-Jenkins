@@ -12,7 +12,7 @@ node {
 
         stage('Image') {
                 steps {
-                    bat 'docker build -t friend-service .'// Construire l'image Docker en utilisant le Dockerfile
+                    bat 'docker build . -t friend-service'// Construire l'image Docker en utilisant le Dockerfile
                 }
 
         }
