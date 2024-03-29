@@ -1,6 +1,6 @@
 node {
 
-    withMaven(maven:'maven') {
+    withMaven(maven:'Maven') {
 
         stage('Checkout') {
             git url: 'https://github.com/kaioufatim/Microsevices-Docker-Jenkins.git'
@@ -15,20 +15,20 @@ node {
         }
 
         stage('Image') {
-            dir ('Friend-service') {
-                def app = docker.build "localhost:8078/Friend-service:${env.version}"
+            dir ('friend-service') {
+                def app = docker.build "localhost:8078/friend-service:${env.version}"
                 app.push()
             }
         }
 
         stage ('Run') {
-            docker.image("localhost:8078/Friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend')
+                    docker.image("localhost:8078/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend ')
+
+//             docker.image("localhost:5000/friend-service:${env.version}").run('-p 8078:8078 -h friend --name friend --link discovery')
         }
 
-        stage ('Final') {
-            build job: 'integration-service-pipeline', wait: false
-        }
+
 
     }
 
-}
+} 

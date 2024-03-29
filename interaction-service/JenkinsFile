@@ -1,6 +1,6 @@
 node {
 
-    withMaven(maven:'maven') {
+    withMaven(maven:'Maven') {
 
         stage('Checkout') {
             git url: 'https://github.com/kaioufatim/Microsevices-Docker-Jenkins.git'
